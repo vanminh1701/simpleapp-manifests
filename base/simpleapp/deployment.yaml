@@ -16,17 +16,17 @@ spec:
       labels:
         app: simpleapp
         version: prod
-      annotations:
-        vault.hashicorp.com/agent-inject: 'true'
-        vault.hashicorp.com/role: 'devweb-app'
-        vault.hashicorp.com/agent-inject-secret-database-config.txt: 'internal/data/database/config'
-        vault.hashicorp.com/agent-init-first: 'true'
-        vault.hashicorp.com/agent-inject-status: 'update'
-        vault.hashicorp.com/agent-inject-template-database-config.txt: |
-          {{- with secret "internal/data/database/config" -}}
-          username: {{ .Data.data.username }}
-          password: {{ .Data.data.password }}
-          {{- end -}}
+      # annotations:
+      #   vault.hashicorp.com/agent-inject: 'true'
+      #   vault.hashicorp.com/role: 'devweb-app'
+      #   vault.hashicorp.com/agent-inject-secret-database-config.txt: 'internal/data/database/config'
+      #   vault.hashicorp.com/agent-init-first: 'true'
+      #   vault.hashicorp.com/agent-inject-status: 'update'
+      #   vault.hashicorp.com/agent-inject-template-database-config.txt: |
+      #     {{- with secret "internal/data/database/config" -}}
+      #     username: {{ .Data.data.username }}
+      #     password: {{ .Data.data.password }}
+      #     {{- end -}}
     spec:
       serviceAccountName: internal-app
       containers:

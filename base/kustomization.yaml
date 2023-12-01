@@ -6,4 +6,3 @@ resources:
   - ./simpleapp/canary-deployment.yaml
   - ./simpleapp/virtual-service.yaml
   - ./simpleapp/destination-rule.yaml
-  - gateway.yaml
