@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: ro-simpleapp
+  labels:
+    app: ro-simpleapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ro-simpleapp
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: ro-simpleapp
+    spec:
+      containers:
+        - name: httpd
+          imagePullPolicy: Always
+          image: tvminh/simpleapp:production
+          ports:
+            - containerPort: 80
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+  strategy:
+    canary:
+      canaryService: simpleapp-canary
+      stableService: simpleapp
+      trafficRouting:
+        istio:
+          virtualService:
+            name: ro-vs-simpleapp
+            routes:
+              - primary
+      steps:
+        - setWeight: 20
+        - pause:
+            duration: 1m
