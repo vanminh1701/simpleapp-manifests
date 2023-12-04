@@ -28,5 +28,5 @@ patchesStrategicMerge:
       spec:
         containers:
           - name: httpd
-            image: tvminh/simpleapp:canary
+            image: tvminh/simpleapp:production
 
