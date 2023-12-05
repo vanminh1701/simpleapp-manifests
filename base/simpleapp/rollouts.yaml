@@ -38,7 +38,39 @@ spec:
             name: ro-vs-simpleapp
             routes:
               - primary
+      analysis:
+        templates:
+          - templateName: success-rate
+        startingStep: 1
+        args:
+          - name: service-name
+            value: simpleapp-canary.dev.svc.cluster.local
       steps:
         - setWeight: 20
         - pause:
             duration: 1m
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: success-rate
+spec:
+  args:
+    - name: service-name
+      value: simpleapp-canary.dev.svc.cluster.local
+  metrics:
+    - name: success-rate
+      interval: 30s
+      successCondition: result[0] >= 0.95
+      failureLimit: 1
+      provider:
+        prometheus:
+          address: http://prometheus.istio-system.svc.cluster.local
+          query: |
+            sum(irate(
+              istio_requests_total{reporter="source",destination_service=~"{{args.service-name}}",response_code!~"5.*"}[30s]
+            )) /
+            sum(irate(
+              istio_requests_total{reporter="source",destination_service=~"{{args.service-name}}"}[30s]
+            ))
+
