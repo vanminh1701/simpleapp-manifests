@@ -4,6 +4,8 @@ metadata:
   name: ro-simpleapp
   labels:
     app: ro-simpleapp
+  annotations:
+    notifications.argoproj.io/subscribe.on-rollout-step-completed.slack: notification
 spec:
   replicas: 2
   selector:
